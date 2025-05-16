@@ -1,291 +1,76 @@
-Nomeados ao Oscar
-Contém a base de indicados ao Oscar em formato SQL para treinar comandos CRUD.
+🏆 Banco de Dados dos Indicados ao Oscar
+Este repositório contém uma base de dados completa dos indicados ao Oscar em formato MongoDB, perfeito para praticar operações CRUD e análises de dados.
 
-Abaixo, algumas atividades para trabalharmos.
+📊 Estatísticas Principais
+Total de registros: 11,004 indicações
 
-Atualize os registros da tabela com os dados do Oscar 2025
-R: Atualizei, e inseri no mongoDB
+Indicações por categoria:
 
-Qual o total de registros na tabela indicados?
-R: 11004
+DIRECTING: 474
 
-Q:
+FILM EDITING: 450
 
-db.registros.countDocuments()
-Qual o número de indicações por categoria agrupadas por categoria?
-R: "DIRECTING": 474,
+ACTOR IN A SUPPORTING ROLE: 445
 
-"FILM EDITING": 450,
+ACTRESS IN A SUPPORTING ROLE: 440
 
-"ACTOR IN A SUPPORTING ROLE": 445,
+BEST PICTURE: 381
 
-"ACTRESS IN A SUPPORTING ROLE": 440,
+🎭 Destaques de Atores
+Ator/Atriz	Indicações	Oscars Ganhos
+Natalie Portman	3	1
+Viola Davis	4	1
+Amy Adams	-	0
+Denzel Washington	-	2
+Sidney Poitier	-	Primeiro ator negro indicado (1959)
+🎬 Filmes Notáveis
+Toy Story ganhou Oscars em: 2011 e 2020
 
-"BEST PICTURE": 381,
+Crash concorreu na 78ª edição
 
-"DOCUMENTARY (Short subject)": 378,
+Central do Brasil não aparece nos registros
 
-"DOCUMENTARY (Feature)": 345,
+Filmes que mereciam indicação:
 
-"CINEMATOGRAPHY": 338,
+Deu a Louca na Chapeuzinho (2004)
 
-"FOREIGN LANGUAGE FILM": 315,
+As Branquelas (2003)
 
-"ART DIRECTION": 307,
+A Fuga das Galinhas (1999)
 
-"COSTUME DESIGN": 295,
+🔍 Consultas Interessantes
+javascript
+// Primeira Melhor Atriz
+db.registros.find({
+  categoria: "ACTRESS",
+  vencedor: 1
+}).sort({ ano_cerimonia: 1 }).limit(1)
+// Resultado: Janet Gaynor em 1928
 
-"MUSIC (Original Score)": 270,
-
-"SOUND": 250,
-
-"ACTOR IN A LEADING ROLE": 245,
-
-"ACTRESS IN A LEADING ROLE": 245,
-
-"ACTRESS": 236,
-
-"MUSIC (Original Song)": 235,
-
-"ACTOR": 232,
-
-"SHORT FILM (Live Action)": 226,
-
-"SHORT FILM (Animated)" 215.
-
-Q:
-
+// Filmes com Melhor Filme E Diretor
 db.registros.aggregate([
-  {
-    $group: {
-      _id: "$categoria",  
-      total_indicacoes: { $sum: 1 }  
-    }
-  },
-  {
-    $sort: { total_indicacoes: -1 } 
-  }
-]);
-Quantas vezes Natalie Portman foi indicada ao Oscar?
-R: 3 vezes
-
-Q:
-
-db.oscar.countDocuments({"Nome": "Natalie Portman"})
-Quantos Oscars Natalie Portman ganhou?
-R: 1 oscar
-
-Q:
-
- db.registros.find({
-"nome_do_indicado": "Natalie Portman", "vencedor": "true"
-})
-Quantas vezes Viola Davis foi indicada ao Oscar?
-R: 4 vezes
-
-Q:
-
-db.registros.countDocuments({nome_do_indicado: "Viola Davis"})
-Quantos Oscars Viola Davis ganhou?
-R: 1 vez
-
-Q:
-
-db.registros.find({
-nome_do_indicado: "Viola Davis", "vencedor": "true"})
-Amy Adams já ganhou algum Oscar?
-R: nenhuma vez
-
-Q:
-
-db.registros.find({
-nome_do_indicado: "Amy Adams", "vencedor": "true"})
-Quais os atores/atrizes que foram indicados mais de uma vez?
-R:1.440
-
-Q: comando para saber quantos foram indicados mais de uma vez:
-
- db.registros.aggregate([
-  { $group: { _id: "$nome_do_indicado", total_indicacoes: { $sum: 1 } } },
-  { $match: { total_indicacoes: { $gt: 1 } } },
-  { $count: "quantidade_atores_mais_uma_indicacao" }
-])
-Q: Comando para saber nome e quantidade dos atores indicados mais de uma vez:
-
- db.registros.aggregate([
-  { $group: { _id: "$nome_do_indicado", total_indicacoes: { $sum: 1 } } },
-  { $match: { total_indicacoes: { $gt: 1 } } }
-])
-A série de filmes Toy Story ganhou Oscars em quais anos?
-R: Duas vezes em 2011 e uma vez em 2020
-
-Q:
-
- db.registros.find({
-nome_do_filme: /Toy Story/,
-vencedor: "true"
-})
-A partir de que ano que a categoria "Actress" deixa de existir?
-R: Em 1928
-
-Q:
-
- db.registros.find({
-categoria: "ACTRESS" ,
-vencedor: "true"
-}).sort({
-ano_cerimonia: 1
-}).limit(1)
-Quem ganhou o primeiro Oscar para Melhor Atriz? Em que ano?
-R: Janet Gaynor no ano de 1928
-
-Q:
-
- db.registros.find({
-categoria: "ACTRESS" ,
-vencedor: "true"
-}).sort({
-ano_cerimonia: 1
-})
-Na campo "Vencedor", altere todos os valores com "true" para 1 e todos os valores "false" para 0.
-R: Dados atualizados
-
-Q:
-
-db.registros.updateMany(
-  { vencedor: "true" },
-  { $set: { vencedor: 1 } }
-);
-
-db.registros.updateMany(
-  { vencedor: "false" },
-  { $set: { vencedor: 0 } }
-);
-Em qual edição do Oscar "Crash" concorreu ao Oscar?
-R: Na edição 78
-
-Q:
-
-db.registros.find({
-nome_do_filme: "Crash"
-})
-O filme Central do Brasil aparece no Oscar?
-R: Não aparece
-
-Q:
-
-db.registros.find({
-nome_do_filme: "Central do Brasil"
-})
-Inclua no banco 3 filmes que nunca foram nem nomeados ao Oscar, mas que merecem ser.
-R: Dados atualizados
-
-Q:
-
-[
-    {
-        "id_registro": 1,
-        "ano_filmagem": 2004,
-        "ano_cerimonia": null,
-        "cerimonia": null,
-        "categoria": "MELHOR FILME DE ANIMAÇÃO",
-        "nome_do_indicado": "Cory Edwards, Todd Edwards, Tony Leech",
-        "nome_do_filme": "Deu a Louca na Chapeuzinho",
-        "vencedor": false
-    },
-    {
-        "id_registro": 2,
-        "ano_filmagem": 2003,
-        "ano_cerimonia": null,
-        "cerimonia": null,
-        "categoria": "MELHOR FILME DE COMEDIA",
-        "nome_do_indicado": "Keenen Ivory Wayans",
-        "nome_do_filme": "As Branquelas",
-        "vencedor": false
-    },
-    {
-        
-        "id_registro": 3,
-        "ano_filmagem": 1999,
-        "ano_cerimonia": null,
-        "cerimonia": null,
-        "categoria": "MELHOR FILME DE ANIMAÇÃO",
-        "nome_do_indicado": "Nick Park, Peter Lord",
-        "nome_do_filme": "A Fuga das Galinhas",
-        "vencedor": false   
-    }
-]
-Denzel Washington já ganhou algum Oscar?
-R: Sim ele ganhou dois oscars
-
-Q:
-
-db.registros.countDocuments({
-"nome_do_indicado": "Denzel Washington",
-vencedor: 1
-});
-Quais os filmes que ganharam o Oscar de Melhor Filme?
-R: Going My Way, The Lost Weekend, The Best Years of Our Lives, Gentleman's Agreement, Hamlet, All the King's Men, All about Eve, An American in Paris, The Greatest Show on Earth, From Here to Eternity, On the Waterfront, Marty, Around the World in 80 Days, The Bridge on the River Kwai, Gigi, Ben-Hur, The Apartment, West Side Story.
-
-Q:
-
-db.registros.find(
-  {
-    categoria: "BEST MOTION PICTURE", 
+  { $match: { 
+    categoria: { $in: ["BEST MOTION PICTURE", "DIRECTING"] }, 
     vencedor: 1 
-  },
-  {
-    nome_do_filme: 1, 
-    _id: 0 
-  }
-)
-Sidney Poitier foi o primeiro ator negro a ser indicado ao Oscar. Em que ano ele foi indicado? Por qual filme?
-R: Ele foi indicado primeiramente em 1959 no filme The Defiant Ones
+  }},
+  { $group: { 
+    _id: { cerimonia: "$cerimonia", filme: "$nome_do_filme" }, 
+    categorias: { $addToSet: "$categoria" } 
+  }},
+  { $match: { 
+    categorias: { $all: ["BEST MOTION PICTURE", "DIRECTING"] } 
+  }}
+])
+⚙️ Atualizações Recentes
+Valores booleanos convertidos para numéricos (1/0)
 
-Q:
+Dados do Oscar 2025 incluídos
 
- db.registros.find({
-nome_do_indicado: "Sidney Poitier"
-})
-Quais os filmes que ganharam o Oscar de Melhor Filme e Melhor Diretor na mesma cerimonia?
-R: Gentleman's Agreement, Marty, The Lost Weekend, The Bridge on the River Kwai, The Apartment, From Here to Eternity, All about Eve, The Best Years of Our Lives, West Side Story, Ben-Hur, On the Waterfront, Gigi, Going My Way
+3 filmes notáveis adicionados à base
 
-Q:
+📅 Curiosidades Históricas
+A categoria "ACTRESS" deixou de existir em 1928
 
-db.registros.aggregate(
-    { $match: { categoria: { $in: ["BEST MOTION PICTURE", "DIRECTING"] }, vencedor: 1 } },
-    { $group: { _id: { cerimonia: "$cerimonia", filme: "$nome_do_filme" }, categorias: { $addToSet: "$categoria" } } },
-    { $match: { categorias: { $all: ["BEST MOTION PICTURE", "DIRECTING"] } } },
-);
-Denzel Washington e Jamie Foxx já concorreram ao Oscar no mesmo ano?
-R: Os dois não concorreram ao oscar no mesmo ano segundo o banco de dados
+Sidney Poitier foi o primeiro ator negro indicado (1959)
 
-Q:
-
-db.backup.find({ nome_do_indicado: "Denzel Washington" })
-db.backup.find({ nome_do_indicado: "Jamie Foxx" })
-db.registros.aggregate([
-  {
-    $match: {
-      nome_do_indicado: { $in: ["Denzel Washington", "Jamie Foxx"] }
-    }
-  },
-  {
-    $group: {
-      _id: "$ano_cerimonia",
-      indicados: { $addToSet: "$nome_do_indicado" }
-    }
-  },
-  {
-    $match: {
-      indicados: { $all: ["Denzel Washington", "Jamie Foxx"] }
-    }
-  },
-  {
-    $project: {
-      _id: 0,
-      ano_cerimonia: "$_id",
-      indicados: 1
-    }
-  }
-]);
+Denzel Washington e Jamie Foxx nunca concorreram no mesmo ano
