@@ -1,76 +1,55 @@
-🏆 Banco de Dados dos Indicados ao Oscar
-Este repositório contém uma base de dados completa dos indicados ao Oscar em formato MongoDB, perfeito para praticar operações CRUD e análises de dados.
+# 🏆 Banco de Dados dos Indicados ao Oscar
 
-📊 Estatísticas Principais
-Total de registros: 11,004 indicações
+Este repositório contém uma base de dados completa com **11.004 registros** de indicações ao Oscar, ideal para praticar **operações CRUD em MongoDB**, fazer **análises estatísticas** e explorar **curiosidades históricas** sobre o maior prêmio do cinema mundial.
 
-Indicações por categoria:
+---
 
-DIRECTING: 474
+## 📊 Estatísticas Gerais
 
-FILM EDITING: 450
+- **Total de registros:** `11.004` indicações
+- **Categorias com mais indicações:**
 
-ACTOR IN A SUPPORTING ROLE: 445
+  | Categoria                        | Indicações |
+  |----------------------------------|------------|
+  | DIRECTING                        | 474        |
+  | FILM EDITING                     | 450        |
+  | ACTOR IN A SUPPORTING ROLE       | 445        |
+  | ACTRESS IN A SUPPORTING ROLE     | 440        |
+  | BEST PICTURE                     | 381        |
 
-ACTRESS IN A SUPPORTING ROLE: 440
+---
 
-BEST PICTURE: 381
+## 🎭 Destaques de Atores e Atrizes
 
-🎭 Destaques de Atores
-Ator/Atriz	Indicações	Oscars Ganhos
-Natalie Portman	3	1
-Viola Davis	4	1
-Amy Adams	-	0
-Denzel Washington	-	2
-Sidney Poitier	-	Primeiro ator negro indicado (1959)
-🎬 Filmes Notáveis
-Toy Story ganhou Oscars em: 2011 e 2020
+| Nome               | Nº de Indicações | Oscars Ganhos | Observação                                    |
+|--------------------|------------------|----------------|-----------------------------------------------|
+| Natalie Portman    | 3                | 1              | —                                             |
+| Viola Davis        | 4                | 1              | —                                             |
+| Amy Adams          | —                | 0              | Nunca ganhou                                   |
+| Denzel Washington  | —                | 2              | —                                             |
+| Sidney Poitier     | —                | —              | Primeiro ator negro indicado (1959)          |
 
-Crash concorreu na 78ª edição
+---
 
-Central do Brasil não aparece nos registros
+## 🎬 Filmes Notáveis
 
-Filmes que mereciam indicação:
+- **Toy Story** venceu em **2011** e **2020**
+- **Crash** concorreu na **78ª edição**
+- **Central do Brasil** **não aparece** nos registros
 
-Deu a Louca na Chapeuzinho (2004)
+**Filmes que mereciam indicação (mas não estão na base):**
+- Deu a Louca na Chapeuzinho (2004)
+- As Branquelas (2003)
+- A Fuga das Galinhas (1999)
 
-As Branquelas (2003)
+---
 
-A Fuga das Galinhas (1999)
+## 🔍 Consultas MongoDB Interessantes
 
-🔍 Consultas Interessantes
-javascript
-// Primeira Melhor Atriz
+### 🎖 Primeira atriz a vencer o Oscar
+```javascript
 db.registros.find({
   categoria: "ACTRESS",
   vencedor: 1
 }).sort({ ano_cerimonia: 1 }).limit(1)
 // Resultado: Janet Gaynor em 1928
-
-// Filmes com Melhor Filme E Diretor
-db.registros.aggregate([
-  { $match: { 
-    categoria: { $in: ["BEST MOTION PICTURE", "DIRECTING"] }, 
-    vencedor: 1 
-  }},
-  { $group: { 
-    _id: { cerimonia: "$cerimonia", filme: "$nome_do_filme" }, 
-    categorias: { $addToSet: "$categoria" } 
-  }},
-  { $match: { 
-    categorias: { $all: ["BEST MOTION PICTURE", "DIRECTING"] } 
-  }}
-])
-⚙️ Atualizações Recentes
-Valores booleanos convertidos para numéricos (1/0)
-
-Dados do Oscar 2025 incluídos
-
-3 filmes notáveis adicionados à base
-
-📅 Curiosidades Históricas
-A categoria "ACTRESS" deixou de existir em 1928
-
-Sidney Poitier foi o primeiro ator negro indicado (1959)
-
-Denzel Washington e Jamie Foxx nunca concorreram no mesmo ano
